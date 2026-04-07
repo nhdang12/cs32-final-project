@@ -87,9 +87,10 @@ class RecipeDatabase:
             })
 
         # Higher score first, then shorter cook time, then alphabetical name
-        results.sort(
-            key=lambda item: (-item["score"], item["recipe"].cook_time, item["recipe"].name.lower())
-        )
+        def sort_key(item):
+            return (-item["score"], item["recipe"].cook_time, item["recipe"].name.lower())
+
+        results.sort(key=sort_key)
 
         if top_n is not None:
             return results[:top_n]
