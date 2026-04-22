@@ -10,6 +10,7 @@ class Recipe:
         self.ingredients = ingredients
         self.cook_time = cook_time
         self.category = category
+        self.instructions = instructions
         self.source = source
 
         # Normalized ingredient set for fast searching
@@ -51,15 +52,41 @@ class Recipe:
         """
         return self.ingredient_set.difference(available_ingredients)
 
-    def match_score(self, available_ingredients):
+    def match_score(self, available_ingredients, max_time=None, favorite_recipes=None):
         """
-        Simple ranking score:
-        number of matching ingredients minus number of missing ingredients.
-        You can improve this later if you want.
+        Calculates an overall match score for this recipe.
+
+        Score includes:
+        - ingredient matches
+        - missing ingredient penalty
+        - time bonus
+        - similarity bonus based on user's favorite recipes
         """
+        
         matches = len(self.get_matching_ingredients(available_ingredients))
         missing = len(self.get_missing_ingredients(available_ingredients))
-        return matches - missing
+    
+        ingredient_score = 3 * matches - 2 * missing
+    
+        time_bonus = 0
+        if max_time is not None and self.cook_time <= max_time:
+            time_bonus = 5
+    
+        similarity_bonus = 0
+        if favorite_recipes:
+            total_similarity = 0
+            count = 0
+    
+            for favorite in favorite_recipes:
+                if favorite.recipe_id != self.recipe_id:
+                    total_similarity += self.similarity_to(favorite)
+                    count += 1
+    
+            if count > 0:
+                average_similarity = total_similarity / count
+                similarity_bonus = average_similarity * 10
+    
+        return ingredient_score + time_bonus + similarity_bonus
 
     def to_dict(self):
         """
