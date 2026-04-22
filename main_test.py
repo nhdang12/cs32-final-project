@@ -1,5 +1,7 @@
+from kaggle_loader import load_recipes_from_csv
+
 def main():
-    db = load_recipes_from_kaggle_csv("recipes.csv")
+    db = load_recipes_from_csv("recipes.csv")
 
     available = {"garlic", "butter", "pasta", "cheese"}
     excluded = {"soy sauce"}
@@ -19,3 +21,6 @@ def main():
         print("  Matching:", sorted(item["matching_ingredients"]))
         print("  Missing:", sorted(item["missing_ingredients"]))
         print()
+
+if __name__ == "__main__":
+    main()
