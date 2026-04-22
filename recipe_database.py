@@ -28,7 +28,14 @@ class RecipeDatabase:
         """
         Add a favorite recipe to the bookmarked list
         """
-        self.favorite_recipe_ids.add(recipe_id)
+        if recipe_id in self.recipes_by_id:
+            self.favorite_recipe_ids.add(recipe_id)
+
+    def remove_favorite(self, recipe_id):
+        """
+        Remove a favorite recipe
+        """
+        self.favorite_recipe_ids.discard(recipe_id)
 
     def is_favorite(self, recipe_id):
         """
@@ -41,6 +48,16 @@ class RecipeDatabase:
         Returns a recipe by its ID, or None if not found.
         """
         return self.recipes_by_id.get(recipe_id)
+
+    def get_favorite_recipes(self):
+        """
+        Returns a list of Recipe objects corresponding to favorite IDs.
+        """
+        return [
+            self.recipes_by_id[recipe_id]
+            for recipe_id in self.favorite_recipe_ids
+            if recipe_id in self.recipes_by_id
+        ]
 
     def search_by_ingredient(self, ingredient):
         """
@@ -86,6 +103,8 @@ class RecipeDatabase:
             available_ingredients = set()
         if excluded_ingredients is None:
             excluded_ingredients = set()
+            
+        favorite_recipes = self.get_favorite_recipes()
 
         # Normalize input sets
         available_ingredients = {item.strip().lower() for item in available_ingredients}
@@ -100,7 +119,7 @@ class RecipeDatabase:
             if max_time is not None and not recipe.matches_time(max_time):
                 continue
 
-            score = recipe.match_score(available_ingredients)
+            score = recipe.match_score(available_ingredients, max_time=max_time, favorite_recipes=favorite_recipes)
             matching = recipe.get_matching_ingredients(available_ingredients)
             missing = recipe.get_missing_ingredients(available_ingredients)
 
