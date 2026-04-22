@@ -10,6 +10,7 @@ class RecipeDatabase:
         self.recipes = []
         self.recipes_by_id = {}
         self.ingredient_index = {}
+        self.favorite_recipe_ids = set()
 
     def add_recipe(self, recipe):
         """
@@ -22,6 +23,18 @@ class RecipeDatabase:
             if ingredient not in self.ingredient_index:
                 self.ingredient_index[ingredient] = set()
             self.ingredient_index[ingredient].add(recipe.recipe_id)
+
+    def add_favorite(self, recipe_id):
+        """
+        Add a favorite recipe to the bookmarked list
+        """
+        self.favorite_recipe_ids.add(recipe_id)
+
+    def is_favorite(self, recipe_id):
+        """
+        Boolean flag if a recipe is a favorite
+        """
+        return recipe_id in self.favorite_recipe_ids
 
     def get_recipe_by_id(self, recipe_id):
         """
@@ -40,6 +53,18 @@ class RecipeDatabase:
 
         recipe_ids = self.ingredient_index[ingredient]
         return [self.recipes_by_id[recipe_id] for recipe_id in recipe_ids]
+
+    def similarity_to(self, other_recipe):
+        """
+        Similarity score between two recipes based on shared ingredients
+        """
+        intersection = self.ingredient_set & other_recipe.ingredient_set
+        union = self.ingredient_set | other_recipe.ingredient_set
+
+        if len(union) == 0:
+            return 0
+
+    return len(intersection) / len(union)
 
     def search(
         self,
