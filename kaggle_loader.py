@@ -4,9 +4,7 @@ from recipe import Recipe
 from recipe_database import RecipeDatabase
 
 
-# -----------------------------
-# TIME PARSING
-# -----------------------------
+# Time Parsing
 def parse_time_to_minutes(time_str):
     if not time_str:
         return 0
@@ -27,9 +25,7 @@ def parse_time_to_minutes(time_str):
     return hours * 60 + minutes
 
 
-# -----------------------------
-# INGREDIENT CLEANING
-# -----------------------------
+# Cleaning ingredients
 def clean_ingredient(text):
     if not text:
         return ""
@@ -80,9 +76,7 @@ def parse_ingredients(ingredients_str):
     return [c for c in cleaned if c]
 
 
-# -----------------------------
-# DIRECTIONS CLEANING
-# -----------------------------
+# Cleaning directions
 def clean_directions(text):
     if not text:
         return ""
@@ -94,10 +88,7 @@ def clean_directions(text):
 
     return text
 
-
-# -----------------------------
-# MAIN LOADER
-# -----------------------------
+# Main loading function
 def load_recipes_from_csv(file_path):
     db = RecipeDatabase()
 
@@ -107,21 +98,15 @@ def load_recipes_from_csv(file_path):
 
         for i, row in enumerate(reader):
             try:
-                # -----------------------------
-                # ID
-                # -----------------------------
+                # id
                 recipe_id = int(row.get("Row", i))
 
-                # -----------------------------
-                # NAME
-                # -----------------------------
+                # name
                 name = (row.get("recipe_name") or "").strip()
                 if not name:
                     continue
 
-                # -----------------------------
-                # TIME (prefer total_time)
-                # -----------------------------
+                # time
                 time_str = (
                     row.get("total_time")
                     or row.get("cook_time")
@@ -130,21 +115,15 @@ def load_recipes_from_csv(file_path):
                 )
                 cook_time = parse_time_to_minutes(time_str)
 
-                # -----------------------------
-                # INGREDIENTS
-                # -----------------------------
+                # ingredients
                 ingredients = parse_ingredients(row.get("ingredients", ""))
                 if not ingredients:
                     continue
 
-                # -----------------------------
-                # DIRECTIONS
-                # -----------------------------
+                # directions
                 instructions = clean_directions(row.get("directions", ""))
 
-                # -----------------------------
-                # CREATE RECIPE
-                # -----------------------------
+                # create recipe
                 recipe = Recipe(
                     recipe_id=recipe_id,
                     name=name,
