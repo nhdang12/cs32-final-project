@@ -81,7 +81,7 @@ class RecipeDatabase:
         if len(union) == 0:
             return 0
 
-    return len(intersection) / len(union)
+        return len(intersection) / len(union)
 
     def search(
         self,
