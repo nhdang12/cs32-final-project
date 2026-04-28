@@ -62,11 +62,19 @@ class Recipe:
         - time bonus
         - similarity bonus based on user's favorite recipes
         """
-        
+    
         matches = len(self.get_matching_ingredients(available_ingredients))
         missing = len(self.get_missing_ingredients(available_ingredients))
+        total_ingredients = len(self.ingredient_set)
     
-        ingredient_score = 3 * matches - 2 * missing
+        if total_ingredients == 0:
+            match_ratio = 0
+        else:
+            match_ratio = matches / total_ingredients
+    
+        ratio_score = match_ratio * 20
+        missing_penalty = missing
+        ingredient_score = ratio_score - missing_penalty
     
         time_bonus = 0
         if max_time is not None and self.cook_time <= max_time:
