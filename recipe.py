@@ -4,7 +4,7 @@ class Recipe:
     for filtering and scoring.
     """
 
-    def __init__(self, recipe_id, name, ingredients, cook_time, category=None, source=None):
+    def __init__(self, recipe_id, name, ingredients, cook_time, category=None, instructions = "", source=None):
         self.recipe_id = recipe_id
         self.name = name
         self.ingredients = ingredients
@@ -96,6 +96,18 @@ class Recipe:
     
         return ingredient_score + time_bonus + similarity_bonus
 
+    def similarity_to(self, other_recipe):
+        """
+        Similarity score between two recipes based on shared ingredients
+        """
+        intersection = self.ingredient_set & other_recipe.ingredient_set
+        union = self.ingredient_set | other_recipe.ingredient_set
+
+        if len(union) == 0:
+            return 0
+
+        return len(intersection) / len(union)
+        
     def to_dict(self):
         """
         Converts the Recipe object into a dictionary.
