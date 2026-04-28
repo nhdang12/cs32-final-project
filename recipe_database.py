@@ -71,18 +71,6 @@ class RecipeDatabase:
         recipe_ids = self.ingredient_index[ingredient]
         return [self.recipes_by_id[recipe_id] for recipe_id in recipe_ids]
 
-    def similarity_to(self, other_recipe):
-        """
-        Similarity score between two recipes based on shared ingredients
-        """
-        intersection = self.ingredient_set & other_recipe.ingredient_set
-        union = self.ingredient_set | other_recipe.ingredient_set
-
-        if len(union) == 0:
-            return 0
-
-        return len(intersection) / len(union)
-
     def search(
         self,
         available_ingredients=None,
