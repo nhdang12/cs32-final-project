@@ -111,7 +111,6 @@ class Recipe:
     def to_dict(self):
         """
         Converts the Recipe object into a dictionary.
-        Helpful later for saving to JSON.
         """
         return {
             "recipe_id": self.recipe_id,
