@@ -1,4 +1,4 @@
-Our final project is a recipe scraper that receives user specifications such as available ingredients, unwanted ingredients, and available time as inputs and outputs a ranked list of recipes from a loaded database based on how well they satisfy the inputs. Additional functionality includes being able to save favorite recipes which influences the scoring algorithm of recipes. 
+Our final project is a recipe scraper that receives user specifications such as available ingredients, unwanted ingredients, and available time as inputs and outputs a ranked list of recipes from a loaded database based on how well they satisfy the inputs. Additional functionality includes being able to save favorite recipes which influences the scoring algorithm of recipes to favor recipes that share ingredients with saved recipes. 
 
 The code can be run directly from the terminal by running main.py. 
 
