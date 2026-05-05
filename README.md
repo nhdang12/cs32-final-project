@@ -2,6 +2,6 @@ Our final project is a recipe scraper that receives user specifications such as 
 
 The code can be run directly from the terminal by running main.py. 
 
-Our recipe database (recipes.csv) came from a Kaggle dataset. 
+Our recipe database (recipes.csv) came from a Kaggle dataset (https://www.kaggle.com/datasets/thedevastator/better-recipes-for-a-better-life/data).
 
 Generative AI was used to help with the file loading (cleaning inputs, implementing reg ex) and the scoring system (tweaking the equation to account for proportion of matched ingredients and optimizing weights).
