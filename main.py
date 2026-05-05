@@ -1,4 +1,4 @@
-from file_loader import load_recipes_from_csv, clean_ingredient
+from kaggle_loader import load_recipes_from_csv, clean_ingredient
 
 
 def get_ingredient_set(prompt):
