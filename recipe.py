@@ -30,9 +30,14 @@ class Recipe:
     def contains_excluded(self, excluded_ingredients):
         """
         Returns True if the recipe contains any excluded ingredient.
-        excluded_ingredients should be a set of normalized strings.
+        Allows partial matches.
         """
-        return len(self.ingredient_set.intersection(excluded_ingredients)) > 0
+        for recipe_ingredient in self.ingredient_set:
+            for excluded in excluded_ingredients:
+                if self.ingredient_matches(excluded, recipe_ingredient):
+                    return True
+    
+        return False
 
     def matches_time(self, max_time):
         """
@@ -40,17 +45,51 @@ class Recipe:
         """
         return self.cook_time <= max_time
 
+    def ingredient_matches(self, user_ingredient, recipe_ingredient):
+        """
+        Returns True if the user's ingredient and recipe ingredient are close enough.
+        Example: 'pasta' matches 'penne pasta'
+        Example: 'salmon' matches 'salmon fillets'
+        """
+        return (
+            user_ingredient in recipe_ingredient
+            or recipe_ingredient in user_ingredient
+        )
+
+
     def get_matching_ingredients(self, available_ingredients):
         """
-        Returns a set of ingredients the user has that are used in this recipe.
+        Returns recipe ingredients that match what the user has.
+        Allows partial matches.
         """
-        return self.ingredient_set.intersection(available_ingredients)
+        matching = set()
+    
+        for recipe_ingredient in self.ingredient_set:
+            for user_ingredient in available_ingredients:
+                if self.ingredient_matches(user_ingredient, recipe_ingredient):
+                    matching.add(recipe_ingredient)
+    
+        return matching
+
 
     def get_missing_ingredients(self, available_ingredients):
         """
-        Returns a set of ingredients needed by the recipe that the user does not have.
+        Returns recipe ingredients that the user does not have.
+        Allows partial matches.
         """
-        return self.ingredient_set.difference(available_ingredients)
+        missing = set()
+    
+        for recipe_ingredient in self.ingredient_set:
+            found_match = False
+    
+            for user_ingredient in available_ingredients:
+                if self.ingredient_matches(user_ingredient, recipe_ingredient):
+                    found_match = True
+    
+            if not found_match:
+                missing.add(recipe_ingredient)
+    
+        return missing
 
     def match_score(self, available_ingredients, max_time=None, favorite_recipes=None):
         """
