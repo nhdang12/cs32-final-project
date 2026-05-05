@@ -107,6 +107,16 @@ class RecipeDatabase:
             if max_time is not None and not recipe.matches_time(max_time):
                 continue
 
+            matching = recipe.get_matching_ingredients(available_ingredients)
+
+            if len(recipe.ingredient_set) == 0:
+                continue
+            
+            match_ratio = len(matching) / len(recipe.ingredient_set)
+            
+            if match_ratio == 0:
+                continue
+
             score = recipe.match_score(available_ingredients, max_time=max_time, favorite_recipes=favorite_recipes)
             matching = recipe.get_matching_ingredients(available_ingredients)
             missing = recipe.get_missing_ingredients(available_ingredients)
