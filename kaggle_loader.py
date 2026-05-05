@@ -32,34 +32,35 @@ def clean_ingredient(text):
 
     text = text.lower().strip()
 
-    # unicode fractions
     text = text.replace("½", "0.5").replace("¼", "0.25").replace("¾", "0.75")
+    text = text.replace("-", " ")
 
-    # remove parentheses content
     text = re.sub(r"\(.*?\)", "", text)
 
-    # remove leading quantities (fractions, decimals, ints)
+    # remove phrases that are not real ingredients
+    text = re.sub(r"\bor as needed\b", "", text)
+    text = re.sub(r"\bto taste\b", "", text)
+    text = re.sub(r"\bas needed\b", "", text)
+
+    # remove leading quantities
     text = re.sub(r"^\s*\d+(\.\d+)?\s*", "", text)
     text = re.sub(r"^\s*\d+\s*/\s*\d+\s*", "", text)
 
     # remove common units
     text = re.sub(
-        r"\b(cup|cups|tbsp|tsp|tablespoons?|teaspoons?|oz|ounce|ounces|pound|pounds|lb|lbs|slice|slices|clove|cloves)\b",
+        r"\b(cup|cups|tbsp|tsp|tablespoons?|teaspoons?|oz|ounce|ounces|pound|pounds|lb|lbs|slice|slices|clove|cloves|can|cans|package|packages|jar|jars)\b",
         "",
         text,
     )
 
-    # remove noisy adjectives
+    # remove descriptive words
     text = re.sub(
-        r"\b(fresh|ripe|large|small|medium|chopped|diced|sliced|peeled|crushed|minced|optional)\b",
+        r"\b(fresh|ripe|large|small|medium|chopped|diced|sliced|peeled|crushed|minced|optional|skinless|boneless|low sodium|lowsodium|extra virgin)\b",
         "",
         text,
     )
 
-    # remove extra punctuation
     text = re.sub(r"[^a-z\s]", "", text)
-
-    # collapse whitespace
     text = re.sub(r"\s+", " ", text).strip()
 
     return text
@@ -69,11 +70,26 @@ def parse_ingredients(ingredients_str):
     if not ingredients_str:
         return []
 
-    # split on commas (works for your dataset format)
     items = ingredients_str.split(",")
 
-    cleaned = [clean_ingredient(i) for i in items]
-    return [c for c in cleaned if c]
+    cleaned = []
+    ignore_words = {
+        "",
+        "or as needed",
+        "as needed",
+        "to taste",
+        "skinless",
+        "boneless",
+        "water"
+    }
+
+    for item in items:
+        ingredient = clean_ingredient(item)
+
+        if ingredient not in ignore_words and len(ingredient) > 1:
+            cleaned.append(ingredient)
+
+    return cleaned
 
 
 # Cleaning directions
