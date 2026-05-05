@@ -82,7 +82,7 @@ def parse_ingredients(ingredients_str):
         "boneless",
         "water", 
         "juiced",
-        "divided"
+        "divided",
         "thinly",
         "quartered",
         "julienned",
