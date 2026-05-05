@@ -48,7 +48,7 @@ def clean_ingredient(text):
 
     # remove common units
     text = re.sub(
-        r"\b(cup|cups|tbsp|tsp|tablespoons?|teaspoons?|oz|ounce|ounces|pound|pounds|lb|lbs|slice|slices|clove|cloves|can|cans|package|packages|jar|jars)\b",
+        r"\b(cup|cups|tbsp|tsp|tablespoons?|teaspoons?|oz|ounce|ounces|quart|pound|pounds|lb|lbs|slice|slices|clove|cloves|can|cans|package|packages|jar|jars)\b",
         "",
         text,
     )
@@ -80,7 +80,13 @@ def parse_ingredients(ingredients_str):
         "to taste",
         "skinless",
         "boneless",
-        "water"
+        "water", 
+        "juiced",
+        "divided"
+        "thinly",
+        "quartered",
+        "julienned",
+        "pitted"
     }
 
     for item in items:
